@@ -45,23 +45,62 @@ jobs:
           docker push 723095751308.dkr.ecr.$AWS_REGION.amazonaws.com/haikali3/viteops:${{ github.sha }}
 
   deploy:
-    runs-on: ubuntu-latest
     needs: build
+    runs-on: ubuntu-latest
+
     steps:
+      - name: Deploy to Dev
+        run: |
+          echo "Deploying to Dev"
+          # Add deployment commands here
+
       - name: Manual Approval for QA
-        uses: hmarr/auto-approve-action@v2
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Please approve the deployment to QA"
+            })
+          # Wait for manual approval
 
       - name: Deploy to QA
-        run: echo "Deploying to QA"
+        run: |
+          echo "Deploying to QA"
+          # Add deployment commands here
 
       - name: Manual Approval for UAT
-        uses: hmarr/auto-approve-action@v2
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Please approve the deployment to UAT"
+            })
+          # Wait for manual approval
 
       - name: Deploy to UAT
-        run: echo "Deploying to UAT"
+        run: |
+          echo "Deploying to UAT"
+          # Add deployment commands here
 
       - name: Manual Approval for Prod
-        uses: hmarr/auto-approve-action@v2
+        uses: actions/github-script@v5
+        with:
+          script: |
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "Please approve the deployment to Prod"
+            })
+          # Wait for manual approval
 
       - name: Deploy to Prod
-        run: echo "Deploying to Prod"
+        run: |
+          echo "Deploying to Prod"
+          # Add deployment commands here
