@@ -40,6 +40,7 @@ jobs:
       #   run: |
       #     docker tag vite-app:${{ github.sha }} <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
       #     docker push <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
+      # test
 
   # deploy:
   #   runs-on: ubuntu-latest
