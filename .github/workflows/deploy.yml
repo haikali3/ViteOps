@@ -36,14 +36,15 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Login to Amazon ECR
-        env:
-          aws-region: ${{ secrets.AWS_REGION }}
         run: |
           aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin 723095751308.dkr.ecr.ap-southeast-1.amazonaws.com/haikali3/viteops
 
+      - name: Push Docker Image to ECR
+        run: |
+          docker tag vite-app:${{ github.sha }} 723095751308.dkr.ecr.$AWS_REGION.amazonaws.com/haikali3/viteops:${{ github.sha }}
+          docker push 723095751308.dkr.ecr.$AWS_REGION.amazonaws.com/haikali3/viteops:${{ github.sha }}
+
       # - name: Push Docker Image to ECR
-      #   env:
-      #     AWS_REGION: us-east-1
       #   run: |
       #     docker tag vite-app:${{ github.sha }} <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
       #     docker push <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
