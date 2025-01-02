@@ -24,9 +24,9 @@ jobs:
       - name: Build Vite App
         run: npm run build
 
-      # - name: Build Docker Image
-      #   run: |
-      #     docker build -t vite-app:${{ github.sha }} .
+      - name: Build Docker Image
+        run: |
+          docker build -t vite-app:${{ github.sha }} .
 
       # - name: Login to Amazon ECR
       #   env:
