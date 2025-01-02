@@ -4,13 +4,13 @@ provider "aws" {
 
 # Create CodeCommit Repository
 resource "aws_codecommit_repository" "repo" {
-  repository_name = "my-app-repo"
-  description     = "CodeCommit repository for my app"
+  repository_name = "my-viteops-repo"
+  description     = "CodeCommit repository for my ViteOps app"
 }
 
 # Create S3 bucket for CodePipeline artifacts
 resource "aws_s3_bucket" "codepipeline_artifacts" {
-  bucket = "my-app-codepipeline-artifacts"
+  bucket = "my-viteops-codepipeline-artifacts"
 }
 
 # IAM Role for CodePipeline
@@ -32,7 +32,7 @@ resource "aws_iam_role" "codepipeline_role" {
 
 # CodePipeline Setup
 resource "aws_codepipeline" "pipeline" {
-  name     = "my-app-pipeline"
+  name     = "my-viteops-pipeline"
   role_arn = aws_iam_role.codepipeline_role.arn
 
   artifact_store {
@@ -77,7 +77,7 @@ resource "aws_codepipeline" "pipeline" {
 
 # CodeBuild Project
 resource "aws_codebuild_project" "build_project" {
-  name          = "my-app-build"
+  name          = "my-viteops-build"
   build_timeout = 30
   source {
     type      = "CODEPIPELINE"
@@ -100,5 +100,5 @@ resource "aws_codebuild_project" "build_project" {
 
 # ECR Repository
 resource "aws_ecr_repository" "repo" {
-  name = "my-app-ecr"
+  name = "my-viteops-ecr"
 }
