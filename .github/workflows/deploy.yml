@@ -28,18 +28,20 @@ jobs:
         run: |
           docker build -t vite-app:${{ github.sha }} .
 
-      - name: Login to Amazon ECR
-        env:
-          AWS_REGION: us-east-1
-        run: |
-          aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin <ECR-REGISTRY-ID>.dkr.ecr.us-east-1.amazonaws.com
+      # - name: Login to Amazon ECR
+      #   env:
+      #     AWS_REGION: us-east-1
+      #   run: |
+      #     aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin <ECR-REGISTRY-ID>.dkr.ecr.us-east-1.amazonaws.com
+      - name: Amazon ECR "Login" Action for GitHub Actions
+        uses: aws-actions/amazon-ecr-login@v2.0.1
 
-      - name: Push Docker Image to ECR
-        env:
-          AWS_REGION: us-east-1
-        run: |
-          docker tag vite-app:${{ github.sha }} <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
-          docker push <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
+      # - name: Push Docker Image to ECR
+      #   env:
+      #     AWS_REGION: us-east-1
+      #   run: |
+      #     docker tag vite-app:${{ github.sha }} <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
+      #     docker push <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
 
   # deploy:
   #   runs-on: ubuntu-latest
