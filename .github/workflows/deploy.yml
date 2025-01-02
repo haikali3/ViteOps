@@ -44,29 +44,24 @@ jobs:
           docker tag vite-app:${{ github.sha }} 723095751308.dkr.ecr.$AWS_REGION.amazonaws.com/haikali3/viteops:${{ github.sha }}
           docker push 723095751308.dkr.ecr.$AWS_REGION.amazonaws.com/haikali3/viteops:${{ github.sha }}
 
-      # - name: Push Docker Image to ECR
-      #   run: |
-      #     docker tag vite-app:${{ github.sha }} <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
-      #     docker push <ECR-REGISTRY-ID>.dkr.ecr.$AWS_REGION.amazonaws.com/vite-app:${{ github.sha }}
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Manual Approval for QA
+        uses: hmarr/auto-approve-action@v2
 
-  # deploy:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Manual Approval for QA
-  #       uses: hmarr/auto-approve-action@v1
+      - name: Deploy to QA
+        run: echo "Deploying to QA"
 
-  #     - name: Deploy to QA
-  #       run: echo "Deploying to QA"
+      - name: Manual Approval for UAT
+        uses: hmarr/auto-approve-action@v2
 
-  #     - name: Manual Approval for UAT
-  #       uses: hmarr/auto-approve-action@v1
+      - name: Deploy to UAT
+        run: echo "Deploying to UAT"
 
-  #     - name: Deploy to UAT
-  #       run: echo "Deploying to UAT"
+      - name: Manual Approval for Prod
+        uses: hmarr/auto-approve-action@v2
 
-  #     - name: Manual Approval for Prod
-  #       uses: hmarr/auto-approve-action@v1
-
-  #     - name: Deploy to Prod
-  #       run: echo "Deploying to Prod"
+      - name: Deploy to Prod
+        run: echo "Deploying to Prod"
