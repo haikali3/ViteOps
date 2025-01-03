@@ -49,19 +49,19 @@ jobs:
     needs: build
     steps:
       - name: Manual Approval for QA
-        uses: hmarr/auto-approve-action@v2
+        run: echo "Approve QA deployment in GitHub UI"
 
       - name: Deploy to QA
         run: echo "Deploying to QA"
 
       - name: Manual Approval for UAT
-        uses: hmarr/auto-approve-action@v2
+        run: echo "Approve UAT deployment in GitHub UI"
 
       - name: Deploy to UAT
         run: echo "Deploying to UAT"
 
       - name: Manual Approval for Prod
-        uses: hmarr/auto-approve-action@v2
+        run: echo "Approve Prod deployment in GitHub UI"
 
       - name: Deploy to Prod
         run: echo "Deploying to Prod"
