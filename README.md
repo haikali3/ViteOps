@@ -1,8 +1,10 @@
-# Vitech CI/CD Pipeline and IaC for AWS
+# ViteOps Deployment with AWS Fargate and GitHub Actions
 
-## Overview
+This repository automates the deployment of a Vite app using AWS ECS Fargate and GitHub Actions for CI/CD. The app is built with Vite, served using Nginx, and utilizes Amazon S3 and ECR.
 
-This project sets up a CI/CD pipeline with four stages (Dev, QA, UAT, Prod) using GitHub Actions or Jenkins. Terraform scripts provision AWS resources.
+## Infrastructure
+
+![alt text](/assets/image.png)
 
 ## Prerequisites
 
@@ -11,41 +13,115 @@ This project sets up a CI/CD pipeline with four stages (Dev, QA, UAT, Prod) usin
 - Docker installed
 - SonarQube setup (optional)
 
-## Infrastructure
+### AWS Setup
 
-![alt text](/assets/image.png)
+- Ensure you have an AWS account with access to:
+  - ECR repository: `haikali3/viteops`
+  - S3 buckets: `s3-viteops-input` and `s3-viteops-output`
+  - Necessary permissions to create ECS, IAM, and CloudWatch resources
+- AWS CLI installed and configured
 
-- CodePipeline
-- CodeBuild
-- ECR
-- Fargate
-- S3 Buckets
-- CloudWatch for logging
+### Docker
+
+- Ensure Docker is installed and running
+
+### Node.js
+
+- Install Node.js (v18)
+
+### GitHub Secrets
+
+Add the following secrets to your repository for GitHub Actions:
+
+- `AWS_ACCESS_KEY_ID`
+- `AWS_SECRET_ACCESS_KEY`
+- `AWS_REGION`
+
+## How to Run Locally
+
+1. Install Dependencies:
+
+```bash
+npm install
+```
+
+2. Build the App:
+
+```bash
+npm run build
+```
+
+3. Run Locally with Docker:
+
+```bash
+docker build -t vite-app .
+docker run -p 80:80 vite-app
+```
+
+Access the app at http://localhost
 
 ## Deployment Steps
 
-1. Clone the repository:
+### 1. Deploy Infrastructure
 
-   ```bash
-   git clone <repository-url>
-   cd <repository>
+Ensure you have Terraform installed. Run the following commands:
 
-    Initialize Terraform:
-   ```
-
+```bash
 terraform init
+terraform apply
+```
 
-Plan and Apply Terraform scripts:
+Confirm the resource creation prompts.
 
-    terraform plan
-    terraform apply -auto-approve
+### 2. CI/CD Pipeline
 
-    Trigger the CI/CD pipeline by pushing code to the repository.
+- Push changes to the main or develop branch to trigger the pipeline
+- The pipeline will:
+  - Build the Vite app
+  - Build and push the Docker image to Amazon ECR
+  - Deploy the task to AWS Fargate upon ECR image push
 
-    Approve changes in each stage (QA, UAT, Prod) manually in the pipeline UI.
+### 3. Trigger ECS Task
 
-CI/CD Pipeline
+CloudWatch Event Rule automatically triggers the ECS task when a new image is pushed to ECR.
 
-    GitHub Actions is used for automation.
-    Docker images are built and pushed to ECR.
-    Fargate runs the batch jobs.
+## Configuration
+
+### S3 Buckets
+
+- Input: `s3-viteops-input`
+- Output: `s3-viteops-output`
+
+### ECS Cluster
+
+- Cluster Name: `fargate-cluster`
+- Service Name: `fargate-service`
+
+### IAM Roles
+
+- `fargate_task_execution_role`: Grants ECS task access to S3 and ECR
+- `cloudwatch_events_role`: Allows CloudWatch to trigger ECS tasks
+
+### GitHub Actions Workflow
+
+- Located in `.github/workflows/deploy.yml`
+
+## Useful Commands
+
+### Docker Login to ECR:
+
+```bash
+aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin <account_id>.dkr.ecr.ap-southeast-1.amazonaws.com
+```
+
+### Push Docker Image to ECR:
+
+```bash
+docker tag vite-app:latest <account_id>.dkr.ecr.ap-southeast-1.amazonaws.com/haikali3/viteops:latest
+docker push <account_id>.dkr.ecr.ap-southeast-1.amazonaws.com/haikali3/viteops:latest
+```
+
+## Notes
+
+- Ensure subnets and security groups in `main.tf` are correctly configured for your environment
+- Replace `<account_id>` with your AWS account ID
