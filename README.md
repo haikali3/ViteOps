@@ -121,6 +121,15 @@ docker tag vite-app:latest <account_id>.dkr.ecr.ap-southeast-1.amazonaws.com/hai
 docker push <account_id>.dkr.ecr.ap-southeast-1.amazonaws.com/haikali3/viteops:latest
 ```
 
+### Destroy Infrastructure with Terraform
+
+Run Terraform destroy to delete all remaining resources:
+
+```bash
+terraform destroy
+```
+
+
 ## Notes
 
 - Ensure subnets and security groups in `main.tf` are correctly configured for your environment
